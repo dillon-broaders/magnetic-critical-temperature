@@ -25,4 +25,4 @@
 
 ## Authors:
 
-- This project was authored by Dillon Broaders.
+- Dillon Broaders.
