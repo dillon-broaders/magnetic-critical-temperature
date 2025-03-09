@@ -3,7 +3,7 @@ import time
 import sys
 import os
 
-#Function to generate random spin vectors
+# Function to generate random spin vectors
 def get_spin_vecs(size=4**3):
     lo = np.repeat(np.array([0.0, 0.0, 0.0])[None, :], size, axis=0) 
     hi = np.repeat(np.array([1.0, 1.0, 1.0])[None, :], size, axis=0)
@@ -18,15 +18,15 @@ def get_spin_vecs(size=4**3):
     st, sp = np.sin(theta), np.sin(phi)
     return np.array([length * ct * sp, length * st * sp, length * cp]).T
 
-#Function to compute the face-centered cubic (fcc) lattice
+# Function to compute the face-centered cubic (fcc) lattice
 def fbcc(x, y, z):
     return 3 * (x*x + y*y + z*z) - 2 * (x*y + y*z + z*x)
 
-#Function to compute the extended body-centered cubic (xbcc) lattice
+# Function to compute the extended body-centered cubic (xbcc) lattice
 def get_xbcc(x, y, z):
     return np.array([-x+y+z, x-y+z, x+y-z])
 
-#Function to get nearest neighbors in the lattice
+# Function to get nearest neighbors in the lattice
 def get_nn():
     nearest = [] 
     for Nd in range(1, 9):
@@ -43,7 +43,7 @@ def get_nn():
             nearest.append(nvals)
     return nearest
 
-#Function to generate undisturbed lattice positions
+# Function to generate undisturbed lattice positions
 def undisturbed(side=8):
     pos = np.zeros(shape=(side*side*side, 3))
     n = 0
@@ -54,7 +54,7 @@ def undisturbed(side=8):
                 n += 1
     return pos
 
-#Function to generate disturbed lattice positions
+# Function to generate disturbed lattice positions
 def disturbed(T, d):
     new_pos = np.zeros(shape=(side*side*side, 3))
     for i in range(side**3):
@@ -62,7 +62,7 @@ def disturbed(T, d):
             new_pos[i, j] = T[i, j] + np.random.uniform(-1*d, d)
     return new_pos
 
-#Function to compute the Heisenberg energy of the lattice
+# Function to compute the Heisenberg energy of the lattice
 def hs_energy(spins, Jey, T1, Tprime1):
     Energy = 0
     landau = 0
@@ -96,12 +96,12 @@ def hs_energy(spins, Jey, T1, Tprime1):
     Total /= side**3
     return Total
 
-#Function to compute the distance between lattice points
+# Function to compute the distance between lattice points
 def get_distance(dist_vector):
     dists = np.linalg.norm([dist_vector + displacements[i] for i in range(displacements.shape[0])],axis=1)
     return np.amin(dists)
 
-#Function to compute local energy at a lattice point
+# Function to compute local energy at a lattice point
 def local_energy(n1, n2, n3, spins, Jey, T1, Tprime1):
     Energy = 0
     for idx, nvals in enumerate(nn_list):
@@ -129,7 +129,7 @@ def local_energy(n1, n2, n3, spins, Jey, T1, Tprime1):
     landau += -5117.64*(si**2) + 1747.08*(si**4) + 588.13*(si**6) 
     return Energy + landau
 
-#Function to get all possible displacements for a lattice
+# Function to get all possible displacements for a lattice
 def get_all_displacements(side, a1, a2, a3):
     ii = 0
     displacements = np.empty((27,3))
@@ -140,7 +140,7 @@ def get_all_displacements(side, a1, a2, a3):
                 ii += 1
     return displacements
 
-#Function to compute magnetization of the lattice
+# Function to compute magnetization of the lattice
 def magnetisation(spins):
     mag = spins.sum(axis=(0,1,2))
     divide = spins.shape[0]**3
@@ -148,7 +148,7 @@ def magnetisation(spins):
     mag = mag * mag
     return mag.sum()
 
-#Function to perform Monte Carlo simulation
+# Function to perform Monte Carlo simulation
 def monte(spins, beta, Jey, T1, Tprime1):
     s_old = np.zeros(3)
     s_new = np.zeros(3)
@@ -176,7 +176,7 @@ def monte(spins, beta, Jey, T1, Tprime1):
                         spins[n1, n2, n3, :] = s_old
     return nacc / side**3  
 
-#Function to perform simulation
+# Function to perform simulation
 def simu(T1, Tprime1, Temperatures, Jey, Nsweep=4000, Neq=2000, fsave=sys.stdout): 
     for temp in Temperatures:
         time1 = time.time()
